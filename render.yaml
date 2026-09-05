@@ -1,0 +1,44 @@
+# Render 部署配置
+# 使用方法：在 Render 控制台 New → Blueprint，选择本仓库即可一键部署
+
+services:
+  - type: web
+    name: checkin-platform
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: cd dist && NODE_ENV=production node server/main.js
+    healthCheckPath: /api/hello
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SERVER_HOST
+        value: "0.0.0.0"
+      - key: SERVER_PORT
+        value: ${PORT}
+      - key: DATABASE_URL
+        fromDatabase:
+          name: checkin-db
+          property: connectionString
+      # 管理员暗号（可选，不填使用默认值）
+      - key: ADMIN_SECRET
+        value: checkin-2024-secret
+      # 管理员密码（可选，不填使用默认值）
+      - key: ADMIN_PASSWORD
+        value: admin@2024
+      # 日志配置
+      - key: LOG_DIR
+        value: ./logs
+      - key: LOG_REQUEST_BODY
+        value: "true"
+      - key: LOG_RESPONSE_BODY
+        value: "true"
+
+databases:
+  - name: checkin-db
+    databaseName: checkin
+    user: checkin_user
+    plan: free
+    ipAllowList:
+      - cidr: 0.0.0.0/0
+        description: Allow all (Render internal + external)
