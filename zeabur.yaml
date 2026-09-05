@@ -1,0 +1,21 @@
+# Zeabur 部署配置
+# 国内访问稳定的全栈部署平台
+
+prebuild:
+  - npm install
+
+build:
+  - npm run build
+
+start:
+  - cd dist && NODE_ENV=production node server/main.js
+
+env:
+  NODE_ENV: production
+  SERVER_HOST: 0.0.0.0
+  SERVER_PORT: "3000"
+  ADMIN_SECRET: checkin-2024-secret
+  ADMIN_PASSWORD: admin@2024
+  LOG_DIR: ./logs
+  LOG_REQUEST_BODY: "true"
+  LOG_RESPONSE_BODY: "true"
